@@ -1,0 +1,16 @@
+[
+    {
+        "modid": "worldscb",
+        "name": "Worlds",
+        "version": "0.1",
+        "requiredMods": [
+            "spongeapi@5.0.0"
+        ]
+    },
+    {
+        "modid": "worlds",
+        "name": "Worlds",
+        "version": "0.1",
+        "description": "World management plugin"
+    }
+]
