@@ -66,11 +66,7 @@ public class CreateCommand implements CommandExecutor {
 				Long s = Long.parseLong(seed.get());
 				worldBuilder.seed(s);
 			} catch (Exception e) {
-				try {
-					worldBuilder.seed(seed.hashCode());
-				} catch (Exception x) {
-					throw new CommandException(Text.of(TextColors.RED, "Mauvais seed"), false);
-				}
+				throw new CommandException(Text.of(TextColors.RED, "Mauvais seed"), false);
 			}
 		}
 		WorldArchetype archetype = worldBuilder.enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
