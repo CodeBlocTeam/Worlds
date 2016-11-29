@@ -20,7 +20,14 @@ public class Worlds {
 	private CommandSpec createCmd = CommandSpec.builder()
 			.description(Text.of("Création d'un monde"))
 			.permission("worlds.command.world.create")
-			.arguments(GenericArguments.flags().flag("n").flag("-nether").flag("e").flag("-ender").flag("f").flag("-flat").buildWith(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+			.arguments(GenericArguments.flags()
+					.flag("n").flag("-nether")
+					.flag("e").flag("-ender")
+					.valueFlag(GenericArguments.string(Text.of("generator")), "-generator")
+					.valueFlag(GenericArguments.string(Text.of("modifier")), "-modifier")
+					.valueFlag(GenericArguments.string(Text.of("seed")), "-seed")
+					.flag("f").flag("-flat")
+					.buildWith(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
 			.executor(new CreateCommand())
 			.build();
 	
