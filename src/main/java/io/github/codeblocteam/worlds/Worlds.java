@@ -11,6 +11,7 @@ import org.spongepowered.api.text.Text;
 
 import io.github.codeblocteam.worlds.commands.CreateCommand;
 import io.github.codeblocteam.worlds.commands.DeleteCommand;
+import io.github.codeblocteam.worlds.commands.LoadCommand;
 import io.github.codeblocteam.worlds.commands.TpCommand;
 import io.github.codeblocteam.worlds.commands.UnloadCommand;
 import io.github.codeblocteam.worlds.commands.WorldCommand;
@@ -57,6 +58,13 @@ public class Worlds {
 			.executor(new UnloadCommand())
 			.build();
 	
+	private CommandSpec loadCmd = CommandSpec.builder()
+			.description(Text.of("Charger un monde"))
+			.permission("worlds.command.world.load")
+			.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+			.executor(new LoadCommand())
+			.build();
+	
 	private CommandSpec worldCmd = CommandSpec.builder()
 			.description(Text.of("Management des mondes"))	//à modifier peut-être
 			.permission("worlds.command.world")
@@ -65,6 +73,7 @@ public class Worlds {
 			.child(deleteCmd, "delete", "d")
 			.child(tpCmd, "tp")
 			.child(unloadCmd, "unload", "ul")
+			.child(loadCmd, "load", "l")
 			.build();
 	
 	private CommandManager cmdManager = Sponge.getCommandManager();
