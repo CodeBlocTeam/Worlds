@@ -77,7 +77,8 @@ public class CreateCommand implements CommandExecutor {
 			throw new CommandException(Text.of(TextColors.RED, "Une erreur est survenue"));
 		}
 		Sponge.getServer().saveWorldProperties(properties);
-		src.sendMessage(Text.of(TextColors.GREEN, "Le monde " + worldName + " a été créé avec succès !"));
+		Sponge.getServer().loadWorld(properties);
+		src.sendMessage(Text.of(TextColors.GREEN, "Le monde ", TextColors.DARK_GREEN, worldName, TextColors.GREEN, " a été créé et chargé avec succès !"));
 		
 		return CommandResult.success();
 	}
