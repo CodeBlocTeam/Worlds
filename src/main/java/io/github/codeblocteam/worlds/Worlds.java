@@ -12,7 +12,9 @@ import org.spongepowered.api.text.Text;
 import io.github.codeblocteam.worlds.commands.CreateCommand;
 import io.github.codeblocteam.worlds.commands.DeleteCommand;
 import io.github.codeblocteam.worlds.commands.ImportCommand;
+import io.github.codeblocteam.worlds.commands.ListCommand;
 import io.github.codeblocteam.worlds.commands.LoadCommand;
+import io.github.codeblocteam.worlds.commands.PropertiesCommand;
 import io.github.codeblocteam.worlds.commands.TpCommand;
 import io.github.codeblocteam.worlds.commands.UnloadCommand;
 import io.github.codeblocteam.worlds.commands.WorldCommand;
@@ -76,6 +78,21 @@ public class Worlds {
 			.executor(new ImportCommand())
 			.build();
 	
+	private CommandSpec propertiesCmd = CommandSpec.builder()
+			.description(Text.of("Obtenir les propriétés d'un monde"))
+			.permission("worlds.command.world.properties")
+			.arguments(GenericArguments.flags()
+					.flag("a").flag("-all")
+					.buildWith(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+			.executor(new PropertiesCommand())
+			.build();
+	
+	private CommandSpec listCmd = CommandSpec.builder()
+			.description(Text.of("Obtenir la liste des mondes"))
+			.permission("worlds.command.world.list")
+			.executor(new ListCommand())
+			.build();
+	
 	private CommandSpec worldCmd = CommandSpec.builder()
 			.description(Text.of("Management des mondes"))	//à modifier peut-être
 			.permission("worlds.command.world")
@@ -84,8 +101,10 @@ public class Worlds {
 			.child(deleteCmd, "delete", "d")
 			.child(tpCmd, "tp")
 			.child(unloadCmd, "unload", "ul")
-			.child(loadCmd, "load", "l")
+			.child(loadCmd, "load", "ld", "lo")
 			.child(importCmd, "import", "i", "imp")
+			.child(propertiesCmd, "properties", "p", "ppt")
+			.child(listCmd, "list", "l", "li")
 			.build();
 	
 	private CommandManager cmdManager = Sponge.getCommandManager();

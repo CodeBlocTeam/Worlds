@@ -25,7 +25,7 @@ public class CreateCommand implements CommandExecutor {
 		String worldName = args.<String>getOne("name").get();
 		
 		if (Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Le monde " + worldName + " existe déjà"), false);
+			throw new CommandException(Text.of(TextColors.RED, "Le monde ", TextColors.DARK_RED, worldName, TextColors.RED, " existe déjà"), false);
 		}
 		
 		if ((args.hasAny("n") || args.hasAny("nether")) && (args.hasAny("e") || args.hasAny("ender"))) 
