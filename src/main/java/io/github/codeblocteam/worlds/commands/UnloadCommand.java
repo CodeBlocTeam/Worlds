@@ -13,14 +13,17 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 public class UnloadCommand implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		
-		String worldName = args.<String>getOne("name").get();
+		WorldProperties properties = args.<WorldProperties>getOne("name").get();
+		String worldName = properties.getWorldName();
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(worldName);
+		
 		if (! optionalWorld.isPresent()) {
 			src.sendMessage(Text.of(TextColors.GREEN, "Aucun monde \"", TextColors.DARK_GREEN, worldName, TextColors.GREEN,  "\" n'est chargé"));
 			return CommandResult.success();

@@ -9,12 +9,14 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.text.Text;
 
+import io.github.codeblocteam.worlds.commands.CopyCommand;
 import io.github.codeblocteam.worlds.commands.CreateCommand;
 import io.github.codeblocteam.worlds.commands.DeleteCommand;
 import io.github.codeblocteam.worlds.commands.ImportCommand;
 import io.github.codeblocteam.worlds.commands.ListCommand;
 import io.github.codeblocteam.worlds.commands.LoadCommand;
 import io.github.codeblocteam.worlds.commands.PropertiesCommand;
+import io.github.codeblocteam.worlds.commands.SpawnCommand;
 import io.github.codeblocteam.worlds.commands.TpCommand;
 import io.github.codeblocteam.worlds.commands.UnloadCommand;
 import io.github.codeblocteam.worlds.commands.WorldCommand;
@@ -41,8 +43,15 @@ public class Worlds {
 			.permission("worlds.command.world.delete")
 			.arguments(GenericArguments.flags()
 					.flag("f").flag("-force")
-					.buildWith(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+					.buildWith(GenericArguments.onlyOne(GenericArguments.world(Text.of("name")))))
 			.executor(new DeleteCommand())
+			.build();
+	
+	private CommandSpec copyCmd = CommandSpec.builder()
+			.description(Text.of("Duplication d'un monde"))
+			.permission("worlds.command.world.copy")
+			.arguments( GenericArguments.onlyOne(GenericArguments.world(Text.of("srcWorld"))), GenericArguments.onlyOne(GenericArguments.string(Text.of("dstWorld"))) )
+			.executor(new CopyCommand())
 			.build();
 	
 	private CommandSpec tpCmd = CommandSpec.builder()
@@ -50,21 +59,21 @@ public class Worlds {
 			.permission("worlds.command.world.tp")
 			.arguments(GenericArguments.flags()
 					.flag("f").flag("-force")
-					.buildWith(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+					.buildWith(GenericArguments.onlyOne(GenericArguments.world(Text.of("name")))))
 			.executor(new TpCommand())
 			.build();
 	
 	private CommandSpec unloadCmd = CommandSpec.builder()
 			.description(Text.of("Décharger un monde"))
 			.permission("worlds.command.world.unload")
-			.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+			.arguments(GenericArguments.onlyOne(GenericArguments.world(Text.of("name"))))
 			.executor(new UnloadCommand())
 			.build();
 	
 	private CommandSpec loadCmd = CommandSpec.builder()
 			.description(Text.of("Charger un monde"))
 			.permission("worlds.command.world.load")
-			.arguments(GenericArguments.onlyOne(GenericArguments.string(Text.of("name"))))
+			.arguments(GenericArguments.onlyOne(GenericArguments.world(Text.of("name"))))
 			.executor(new LoadCommand())
 			.build();
 	
@@ -83,7 +92,7 @@ public class Worlds {
 			.permission("worlds.command.world.properties")
 			.arguments(GenericArguments.flags()
 					.flag("a").flag("-all")
-					.buildWith(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+					.buildWith(GenericArguments.onlyOne(GenericArguments.world(Text.of("name")))))
 			.executor(new PropertiesCommand())
 			.build();
 	
@@ -93,18 +102,26 @@ public class Worlds {
 			.executor(new ListCommand())
 			.build();
 	
+	private CommandSpec spawnCmd = CommandSpec.builder()
+			.description(Text.of("Aller au spawn du monde"))
+			.permission("worlds.command.world.spawn")
+			.executor(new SpawnCommand())
+			.build();
+	
 	private CommandSpec worldCmd = CommandSpec.builder()
 			.description(Text.of("Management des mondes"))	//à modifier peut-être
 			.permission("worlds.command.world")
 			.executor(new WorldCommand())
 			.child(createCmd, "create", "c")
-			.child(deleteCmd, "delete", "d")
+			.child(copyCmd, "copy", "cp")
+			.child(deleteCmd, "delete", "remove", "d", "rm")
 			.child(tpCmd, "tp")
 			.child(unloadCmd, "unload", "ul")
-			.child(loadCmd, "load", "ld", "lo")
+			.child(loadCmd, "load", "ld")
 			.child(importCmd, "import", "i", "imp")
 			.child(propertiesCmd, "properties", "p", "ppt")
-			.child(listCmd, "list", "l", "li")
+			.child(listCmd, "list", "l")
+			.child(spawnCmd, "spawn", "s")
 			.build();
 	
 	private CommandManager cmdManager = Sponge.getCommandManager();

@@ -15,11 +15,10 @@ public class DeleteCommand implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		
-		String worldName = args.<String>getOne("name").get();
+		WorldProperties properties = args.<WorldProperties>getOne("name").get();
+		String worldName = properties.getWorldName();
 		
 		Sponge.getCommandManager().process(src, "world unload " + worldName);
-		
-		WorldProperties properties = Sponge.getServer().getWorldProperties(worldName).get();
 		
 		try {
 			if (Sponge.getServer().deleteWorld(properties).get()) {

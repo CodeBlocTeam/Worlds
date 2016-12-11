@@ -14,6 +14,7 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.TeleportHelper;
 import org.spongepowered.api.world.World;
+import org.spongepowered.api.world.storage.WorldProperties;
 
 public class TpCommand implements CommandExecutor {
 
@@ -24,7 +25,7 @@ public class TpCommand implements CommandExecutor {
 			throw new CommandException(Text.of(TextColors.RED, "Commande utilisable par un joueur uniquement."), false);
 		}
 		
-		Optional<World> optionalWorld = Sponge.getServer().getWorld(args.<String>getOne("name").get());
+		Optional<World> optionalWorld = Sponge.getServer().getWorld(args.<WorldProperties>getOne("name").get().getWorldName());
 		if (! optionalWorld.isPresent()) {
 			throw new CommandException(Text.of(TextColors.RED, "Ce monde n'existe pas ou n'est pas chargé"));
 		}

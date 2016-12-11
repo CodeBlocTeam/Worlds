@@ -2,8 +2,6 @@ package io.github.codeblocteam.worlds.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -22,6 +20,7 @@ public class PropertiesCommand implements CommandExecutor {
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		
+		/*
 		String worldName = args.<String>getOne("name").get();
 		
 		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
@@ -31,6 +30,10 @@ public class PropertiesCommand implements CommandExecutor {
 		}
 		
 		WorldProperties properties = optionalProperties.get();
+		*/
+		
+		WorldProperties properties = args.<WorldProperties>getOne("name").get();
+		String worldName = properties.getWorldName();
 		List<Text> list = new ArrayList<>();
 		
 		list.add(Text.of(TextColors.DARK_AQUA, "Dimension", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.getDimensionType().toString().toLowerCase() ));
