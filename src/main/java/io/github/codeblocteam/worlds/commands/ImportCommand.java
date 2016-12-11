@@ -1,7 +1,7 @@
 package io.github.codeblocteam.worlds.commands;
 
+import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
@@ -12,26 +12,37 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.DimensionTypes;
-import org.spongepowered.api.world.GeneratorType;
 import org.spongepowered.api.world.WorldArchetype;
-import org.spongepowered.api.world.gen.WorldGeneratorModifier;
 import org.spongepowered.api.world.storage.WorldProperties;
 
-public class CreateCommand implements CommandExecutor {
+public class ImportCommand implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		
 		String worldName = args.<String>getOne("name").get();
+		String defaultWorldName = Sponge.getServer().getDefaultWorldName();
 		
-		if (Sponge.getServer().getWorldProperties(worldName).isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Le monde " + worldName + " existe déjà"), false);
+		if (Sponge.getServer().getWorld(worldName).isPresent()) {
+			throw new CommandException(Text.of(TextColors.DARK_RED, worldName, TextColors.RED, " est déjà chargé"), false);
 		}
+		
+		File spongeDataFile = new File(defaultWorldName + File.separator + worldName, "level_sponge.dat");
+		if (spongeDataFile.exists()) {
+			src.sendMessage(Text.of(TextColors.YELLOW, "Monde Sponge détecté, utilisez la commande load pour le charger"));
+			return CommandResult.success();
+		}
+		
+		File worldDataFile = new File(defaultWorldName + File.separator + worldName, "level.dat");
+		if (!worldDataFile.exists())
+			throw new CommandException(Text.of(TextColors.RED, "Aucun monde nommé ", TextColors.DARK_RED, worldName, TextColors.RED, " n'a été trouvé"), false);
 		
 		if ((args.hasAny("n") || args.hasAny("nether")) && (args.hasAny("e") || args.hasAny("ender"))) 
 			throw new CommandException(Text.of(TextColors.RED, "Vous avez entré plus d'un type de dimension"), false);
 		
+		
 		WorldArchetype.Builder worldBuilder = WorldArchetype.builder();
+		
 		if (args.hasAny("n") || args.hasAny("nether"))
 			worldBuilder.dimension(DimensionTypes.NETHER);
 		else if (args.hasAny("e") || args.hasAny("ender"))
@@ -39,48 +50,19 @@ public class CreateCommand implements CommandExecutor {
 		else
 			worldBuilder.dimension(DimensionTypes.OVERWORLD);
 		
-		Optional<GeneratorType> generator = args.<GeneratorType>getOne("generator");
-		Optional<WorldGeneratorModifier> modifier = args.<WorldGeneratorModifier>getOne("modifier");
-		Optional<String> seed = args.<String>getOne("seed");
-		
-		if (generator.isPresent()){
-			try {
-				worldBuilder.generator(generator.get());
-			} catch (Exception e) {
-				throw new CommandException(Text.of(TextColors.RED, "Mauvais générateur"), false);
-			}
-		}
-		
-		if (modifier.isPresent()){
-			try {
-				worldBuilder.generatorModifiers(modifier.get());
-			} catch (Exception e) {
-				throw new CommandException(Text.of(TextColors.RED, "Mauvais modifieur de générateur"), false);
-			}
-		}
-		
-		if (args.hasAny("f") || args.hasAny("flat"))
-			worldBuilder.seed("3;7,2*3,2;1;".hashCode());
-		
-		if (seed.isPresent()){
-			try {
-				Long s = Long.parseLong(seed.get());
-				worldBuilder.seed(s);
-			} catch (Exception e) {
-				throw new CommandException(Text.of(TextColors.RED, "Mauvais seed"), false);
-			}
-		}
 		WorldArchetype archetype = worldBuilder.enabled(true).keepsSpawnLoaded(true).loadsOnStartup(true).build(worldName, worldName);
 		WorldProperties properties;
+		
 		try {
 			properties = Sponge.getServer().createWorldProperties(worldName, archetype);
 		} catch (IOException e) {
 			throw new CommandException(Text.of(TextColors.RED, "Une erreur est survenue"));
 		}
+		
 		Sponge.getServer().saveWorldProperties(properties);
 		Sponge.getServer().loadWorld(properties);
-		src.sendMessage(Text.of(TextColors.GREEN, "Le monde ", TextColors.DARK_GREEN, worldName, TextColors.GREEN, " a été créé et chargé avec succès !"));
 		
+		src.sendMessage(Text.of(TextColors.GREEN, "Le monde ", TextColors.DARK_GREEN, worldName, TextColors.GREEN, " a été importé et chargé avec succès !"));
 		return CommandResult.success();
 	}
 

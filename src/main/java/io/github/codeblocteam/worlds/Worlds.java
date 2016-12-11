@@ -11,6 +11,7 @@ import org.spongepowered.api.text.Text;
 
 import io.github.codeblocteam.worlds.commands.CreateCommand;
 import io.github.codeblocteam.worlds.commands.DeleteCommand;
+import io.github.codeblocteam.worlds.commands.ImportCommand;
 import io.github.codeblocteam.worlds.commands.LoadCommand;
 import io.github.codeblocteam.worlds.commands.TpCommand;
 import io.github.codeblocteam.worlds.commands.UnloadCommand;
@@ -65,6 +66,16 @@ public class Worlds {
 			.executor(new LoadCommand())
 			.build();
 	
+	private CommandSpec importCmd = CommandSpec.builder()
+			.description(Text.of("Importer un monde"))
+			.permission("worlds.command.world.import")
+			.arguments(GenericArguments.flags()
+					.flag("n").flag("-nether")
+					.flag("e").flag("-ender")
+					.buildWith(GenericArguments.onlyOne(GenericArguments.string(Text.of("name")))))
+			.executor(new ImportCommand())
+			.build();
+	
 	private CommandSpec worldCmd = CommandSpec.builder()
 			.description(Text.of("Management des mondes"))	//à modifier peut-être
 			.permission("worlds.command.world")
@@ -74,6 +85,7 @@ public class Worlds {
 			.child(tpCmd, "tp")
 			.child(unloadCmd, "unload", "ul")
 			.child(loadCmd, "load", "l")
+			.child(importCmd, "import", "i", "imp")
 			.build();
 	
 	private CommandManager cmdManager = Sponge.getCommandManager();

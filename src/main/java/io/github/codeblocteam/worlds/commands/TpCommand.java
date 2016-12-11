@@ -44,7 +44,7 @@ public class TpCommand implements CommandExecutor {
 		Player player = (Player) src;
 		player.setLocation(location);
 		
-		src.sendMessage(Text.of(TextColors.GREEN, "Téléportation au monde ", TextColors.DARK_GREEN, world.getName()));
+		src.sendMessage(Text.of(TextColors.GREEN, "Téléporté au monde ", TextColors.DARK_GREEN, world.getName()));
 		return CommandResult.success();
 	}
 
