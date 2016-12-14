@@ -1,6 +1,6 @@
 [
     {
-        "modid": "worldscb",
+        "modid": "worlds_codebloc",
         "name": "Worlds",
         "version": "0.1",
         "requiredMods": [

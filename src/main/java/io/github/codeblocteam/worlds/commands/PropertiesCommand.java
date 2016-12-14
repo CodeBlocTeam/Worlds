@@ -15,23 +15,13 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.storage.WorldProperties;
 
+import com.flowpowered.math.vector.Vector3i;
+
 public class PropertiesCommand implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		
-		/*
-		String worldName = args.<String>getOne("name").get();
-		
-		Optional<WorldProperties> optionalProperties = Sponge.getServer().getWorldProperties(worldName);
-		
-		if (! optionalProperties.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Aucun monde ", TextColors.DARK_RED, worldName, TextColors.RED, " n'a été trouvé"), false);
-		}
-		
-		WorldProperties properties = optionalProperties.get();
-		*/
-		
+
 		WorldProperties properties = args.<WorldProperties>getOne("name").get();
 		String worldName = properties.getWorldName();
 		List<Text> list = new ArrayList<>();
@@ -44,11 +34,18 @@ public class PropertiesCommand implements CommandExecutor {
 		list.add(Text.of(TextColors.DARK_AQUA, "Commandes", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.areCommandsAllowed() ));
 		
 		if (args.hasAny("a") || args.hasAny("all")) {
-			list.add(Text.of(" "));
-			list.add(Text.of(TextColors.DARK_GREEN, "Enabled", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.isEnabled() ));
-			list.add(Text.of(TextColors.DARK_GREEN, "KeepSpawnLoaded", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.doesKeepSpawnLoaded() ));
-			list.add(Text.of(TextColors.DARK_GREEN, "GenerateSpawnOnLoad", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.doesGenerateSpawnOnLoad() ));
-		} //TODO : Rajouter toutes les autres propriétés à la con
+			Vector3i spawn = properties.getSpawnPosition();
+			list.add(Text.of(TextColors.DARK_AQUA, "Structures", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.usesMapFeatures() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "Enabled", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.isEnabled() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "LoadsOnStartup", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.loadOnStartup() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "Seed", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.getSeed() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "Spawn", TextColors.WHITE, " : ", TextStyles.ITALIC, "X=", spawn.getX(), " Y=", spawn.getY(), " Z=", spawn.getZ() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "KeepSpawnLoaded", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.doesKeepSpawnLoaded() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "GenerateSpawnOnLoad", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.doesGenerateSpawnOnLoad() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "GenerateBonusChest", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.doesGenerateBonusChest() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "GeneratorModifiers", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.getGeneratorModifiers().toString() ));
+			list.add(Text.of(TextColors.DARK_AQUA, "TotalTime", TextColors.WHITE, " : ", TextStyles.ITALIC, properties.getTotalTime() ));
+		}
 		
 		if (src instanceof Player && (args.hasAny("a") || args.hasAny("all"))) {
 			PaginationList.Builder book = PaginationList.builder();
