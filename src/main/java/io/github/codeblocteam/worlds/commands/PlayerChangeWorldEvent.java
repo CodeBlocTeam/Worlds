@@ -1,4 +1,4 @@
-package io.github.codeblocteam.worlds.events;
+package io.github.codeblocteam.worlds.commands;
 
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
