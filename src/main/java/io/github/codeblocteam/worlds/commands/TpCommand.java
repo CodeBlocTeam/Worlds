@@ -2,6 +2,7 @@ package io.github.codeblocteam.worlds.commands;
 
 import java.util.Optional;
 
+import io.github.codeblocteam.worlds.events.PlayerChangeWorldEvent;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
