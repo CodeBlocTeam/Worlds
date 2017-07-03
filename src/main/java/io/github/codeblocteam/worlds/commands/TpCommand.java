@@ -2,6 +2,7 @@ package io.github.codeblocteam.worlds.commands;
 
 import java.util.Optional;
 
+import io.github.codeblocteam.worlds.events.PlayerChangeWorldEvent;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -9,6 +10,7 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -27,7 +29,7 @@ public class TpCommand implements CommandExecutor {
 		
 		Optional<World> optionalWorld = Sponge.getServer().getWorld(args.<WorldProperties>getOne("name").get().getWorldName());
 		if (! optionalWorld.isPresent()) {
-			throw new CommandException(Text.of(TextColors.RED, "Ce monde n'existe pas ou n'est pas chargé"));
+			throw new CommandException(Text.of(TextColors.RED, "Ce monde n'existe pas ou n'est pas chargï¿½"));
 		}
 		
 		World world = optionalWorld.get();
@@ -37,15 +39,18 @@ public class TpCommand implements CommandExecutor {
 			TeleportHelper teleportHelper = Sponge.getGame().getTeleportHelper();
 			Optional<Location<World>> optionalLocation = teleportHelper.getSafeLocation(location);
 			if (! (optionalLocation.isPresent())) {
-				throw new CommandException(Text.of(TextColors.RED, "Aucun endroit sûr n'a été trouvé pour se téléporter dans ce monde. Utilisez -f ou --force pour y aller quand même"), false);
+				throw new CommandException(Text.of(TextColors.RED, "Aucun endroit sï¿½r n'a ï¿½tï¿½ trouvï¿½ pour se tï¿½lï¿½porter dans ce monde. Utilisez -f ou --force pour y aller quand mï¿½me"), false);
 			}
 			location = optionalLocation.get();
 		}
 		
 		Player player = (Player) src;
 		player.setLocation(location);
+
+		PlayerChangeWorldEvent event = new PlayerChangeWorldEvent(Cause.source(src).build(), (Player) src, world);
+		Sponge.getEventManager().post(event);
 		
-		src.sendMessage(Text.of(TextColors.GREEN, "Téléporté au monde ", TextColors.DARK_GREEN, world.getName()));
+		src.sendMessage(Text.of(TextColors.GREEN, "Tï¿½lï¿½portï¿½ au monde ", TextColors.DARK_GREEN, world.getName()));
 		return CommandResult.success();
 	}
 
