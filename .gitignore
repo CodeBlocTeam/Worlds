@@ -61,9 +61,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-.gradle
-/build/
-gradle-app.setting
-!gradle-wrapper.jar
-.gradletasknamecache
